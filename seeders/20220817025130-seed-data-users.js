@@ -8,7 +8,8 @@ module.exports = {
         ...el,
         createdAt: new Date(),
         updatedAt: new Date(),
-        isSuspended: false
+        isSuspended: false,
+        isAdmin: false
       }
     })
     await queryInterface.bulkInsert('Users', data)
