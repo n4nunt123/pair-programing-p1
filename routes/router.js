@@ -30,10 +30,6 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage,  fileFilter:fileFilter });
 
-router.get('/', (req, res) => {
-  res.send('home')
-})
-
 router.get('/', Controller.home)
 router.get('/register', Controller.register)
 router.post('/register', Controller.saveRegister)
