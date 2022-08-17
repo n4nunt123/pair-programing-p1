@@ -1,15 +1,53 @@
-const express = require('express')
-const route = express.Router()
-const Controller = require('../controllers/controller')
+const express = require('express');
+const router = express.Router();
+const Controller = require('../controllers/controller');
+const multer = require('multer');
 
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Configure file upload destination
+    cb(null, 'images');
+  },
+  filename: (req, file, cb) => {
+    // Configure filename
+    cb(null, new Date().getTime() + '-' + file.originalname);
+  }
+})
 
-route.get('/', Controller.home)
-route.get('/register', Controller.register)
-route.post('/register', Controller.saveRegister)
-route.get('/login', Controller.login)
-route.post('/login', Controller.logon)
-route.get('/admin', Controller.admin)
-route.get('/users', Controller.user)
-route.get('/users/:id/', Controller.suspend)
+// const upload = multer({ storage: storage });
 
-module.exports = route
+// Configure only filetype image can be uploaded
+const fileFilter = (req, file, cb) => {
+  if ( file.mimetype === 'image/png' ||
+       file.mimetype === 'image/jpg' ||
+       file.mimetype === 'image/jpeg') {
+        cb(null, true);
+  } else {
+    cb(null, false);
+    return cb(new Error('Only png, jpg, jpeg allowed'));
+  }
+}
+
+const upload = multer({ storage: storage,  fileFilter:fileFilter });
+
+router.get('/', (req, res) => {
+  res.send('home')
+})
+
+router.get('/', Controller.home)
+router.get('/register', Controller.register)
+router.post('/register', Controller.saveRegister)
+router.get('/login', Controller.login)
+router.post('/login', Controller.logon)
+router.get('/admin', Controller.admin)
+router.get('/users', Controller.user)
+router.get('/users/:id/', Controller.suspend)
+
+router.get('/profile/:ProfileId', Controller.showProfile);
+router.get('/profile/:ProfileId/add', Controller.addPost);
+router.post('/profile/:ProfileId/add', upload.single('image'), Controller.savePost);
+router.get('/profile/:ProfileId/edit', Controller.editProfile);
+router.post('/profile/:ProfileId/edit', upload.single('image'), Controller.saveEditProfile);
+router.get('/profile/:ProfileId/post/:PostId/delete', Controller.deletePost);
+
+module.exports = router;

@@ -2,8 +2,8 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "pair-programing",
-    "host": "127.0.0.1",
+    "database": "h8m8-apps",
+    "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
