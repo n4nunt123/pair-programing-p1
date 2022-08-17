@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { Op } = require('sequelize')
 const { timeFormatter } = require('../helpers/index');
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
@@ -20,6 +21,38 @@ module.exports = (sequelize, DataTypes) => {
     get formattedTime() {
       return timeFormatter(this.createdAt);
     }
+    
+    static sortAndSearch(condition){
+      if (Boolean(condition.Newest)) {
+        return {
+          order: [['createdAt','DESC']]
+        }
+      } else if (Boolean(condition.Oldest)) {
+        return {
+          order: [['createdAt','Asc']]
+        }
+      } else if (condition.search) {
+        return {
+          where: {
+            content: { [Op.iLike]: `%${condition.search}%` } 
+          }
+        }
+      }
+    }
+
+    static profilePost(data){
+      let listProfile = data.map(el => {
+        return el.UserPostId
+      })
+      return {
+        where: {
+          UserProfileId: { 
+            [Op.or]: listProfile
+          }
+        }
+      }
+    }
+    
   }
   Post.init({
     content: {
