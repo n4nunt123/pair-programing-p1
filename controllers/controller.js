@@ -128,26 +128,26 @@ class Controller {
   static home(req, res) {
     let condition = req.query
     if (condition) {
-      condition = [Posts.sortAndSearch(condition)].map(el => {
+      condition = [Post.sortAndSearch(condition)].map(el => {
         return {
           ...el,
-          include: Users
+          include: User
         }
       })
     } else {
-      condition = { include: Users }
+      condition = { include: User }
     }
     let listPost = {}
-    Posts.findAll(condition[0])
+    Post.findAll(condition[0])
       .then(result => {
         listPost = result
-        let listProfile = [Posts.profilePost(result)].map(el => {
+        let listProfile = [Post.profilePost(result)].map(el => {
           return {
             ...el,
-            include: Users
+            include: User
           }
         })
-        return Profiles.findAll(listProfile[0])
+        return Profile.findAll(listProfile[0])
       })
       .then(result => {
         res.render('home', { listPost, result })
@@ -166,7 +166,7 @@ class Controller {
     const { username, password, email, firstName, lastName, gender, dateOfBirth, phoneNumber, isAdmin } = req.body
 
     let id = 0
-    Users.create({
+    User.create({
       username,
       password,
       email,
@@ -177,7 +177,7 @@ class Controller {
     })
       .then(result => {
         id = result.id
-        return Profiles.create({
+        return Profile.create({
           firstName,
           lastName,
           gender,
@@ -205,7 +205,7 @@ class Controller {
       const error = `Invalid Username/Password`
       res.redirect(`/login?error=${error}`)
     } else {
-      Users.findOne({ where: { username }})
+      User.findOne({ where: { username }})
         .then(result => {
           if (!result) {
             const error = `Invalid Username/Password`
@@ -239,26 +239,26 @@ class Controller {
   static admin(req, res) {
     let condition = req.query
     if (condition) {
-      condition = [Posts.sortAndSearch(condition)].map(el => {
+      condition = [Post.sortAndSearch(condition)].map(el => {
         return {
           ...el,
-          include: Users
+          include: User
         }
       })
     } else {
-      condition = { include: Users }
+      condition = { include: User }
     }
     let listPost = {}
-    Posts.findAll(condition[0])
+    Post.findAll(condition[0])
       .then(result => {
         listPost = result
-        let listProfile = [Posts.profilePost(result)].map(el => {
+        let listProfile = [Post.profilePost(result)].map(el => {
           return {
             ...el,
-            include: Users
+            include: User
           }
         })
-        return Profiles.findAll(listProfile[0])
+        return Profile.findAll(listProfile[0])
       })
       .then(result => {
         res.render('admin', { listPost, result })
@@ -270,8 +270,8 @@ class Controller {
 
   static user(req, res) {
     let error = req.query.error
-    Users.findAll({ 
-      include: Profiles,
+    User.findAll({ 
+      include: Profile,
       order: [[ 'id','ASC' ]]
     })
       .then(result => {
@@ -284,15 +284,15 @@ class Controller {
 
   static suspend(req, res) {
     let id = req.params.id
-    Users.findOne({ where: { id } })
+    User.findOne({ where: { id } })
       .then(result => {
         if(!result.isAdmin){
           if (result.isSuspended) {
-            return Users.update(
+            return User.update(
               { isSuspended: false },
               { where: { id:result.id } })
           } else {
-            return Users.update(
+            return User.update(
               { isSuspended: true },
               { where: { id:result.id } })
           }
@@ -301,10 +301,10 @@ class Controller {
         }
       })
       .then(result => {
-        res.redirect('/users')
+        res.redirect('/user')
       })
       .catch(err => {
-        res.redirect(`/users?error=${err}`)
+        res.redirect(`/user?error=${err}`)
       })
   }
 }
