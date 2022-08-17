@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { Op } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Posts extends Model {
     /**
@@ -12,14 +13,46 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Posts.belongsTo(models.Users, {
-        foreignKey: 'UserId'
+        foreignKey: 'UserPostId'
       })
     }
+
+    static sortAndSearch(condition){
+      if (Boolean(condition.Newest)) {
+        return {
+          order: [['createdAt','DESC']]
+        }
+      } else if (Boolean(condition.Oldest)) {
+        return {
+          order: [['createdAt','Asc']]
+        }
+      } else if (condition.search) {
+        return {
+          where: {
+            content: { [Op.iLike]: `%${condition.search}%` } 
+          }
+        }
+      }
+    }
+
+    static profilePost(data){
+      let listProfile = data.map(el => {
+        return el.UserPostId
+      })
+      return {
+        where: {
+          UserProfileId: { 
+            [Op.or]: listProfile
+          }
+        }
+      }
+    }
+
   }
   Posts.init({
     content: DataTypes.STRING,
     imgUrl: DataTypes.STRING,
-    UserId: DataTypes.INTEGER
+    UserPostId: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Posts',

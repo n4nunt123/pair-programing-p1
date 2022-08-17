@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Profiles.belongsTo(models.Users, {
-        foreignKey: 'UserId'
+        foreignKey: 'UserProfileId'
       })
     }
   }
@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     dateOfBirth: DataTypes.DATE,
     phoneNumber: DataTypes.INTEGER,
-    UserId: DataTypes.INTEGER,
+    UserProfileId: DataTypes.INTEGER,
     imageProfileUrl: DataTypes.INTEGER
   }, {
     sequelize,
