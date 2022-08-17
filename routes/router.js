@@ -34,6 +34,15 @@ router.get('/', (req, res) => {
   res.send('home')
 })
 
+router.get('/', Controller.home)
+router.get('/register', Controller.register)
+router.post('/register', Controller.saveRegister)
+router.get('/login', Controller.login)
+router.post('/login', Controller.logon)
+router.get('/admin', Controller.admin)
+router.get('/users', Controller.user)
+router.get('/users/:id/', Controller.suspend)
+
 router.get('/profile/:ProfileId', Controller.showProfile);
 router.get('/profile/:ProfileId/add', Controller.addPost);
 router.post('/profile/:ProfileId/add', upload.single('image'), Controller.savePost);
