@@ -46,12 +46,13 @@
           </div>
         </div>
         
-        <% data.Posts.forEach(el => { %>
+        <% data.Posts.forEach((el) => { %>
           <div class="col-lg-6 col-md-8 no-pd" style="background-color: #e5e5e5; width: 75%;">
             <img src="<%= el.imgUrl %>" alt="content-image" style="width: 200px">
             <p><%= el.content %></p>
             <br>
             <p>posted at: <%= el.formattedTime %></p>
+            <a class="btn btn-danger btn-sm" href="/profile/<%= data.Profile.id %>/post/<%= el.id %>/delete" role="button">Delete</a>
           </div>
         <% }) %>  
       </div>

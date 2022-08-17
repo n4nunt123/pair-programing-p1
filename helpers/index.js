@@ -24,7 +24,12 @@ function dateFormatter(date) {
   return `${year}-${month}-${day}`
 }
 
+function listErrrors(error) {
+  return error.errors.map(el => el.message);
+}
+
 module.exports = { 
   timeFormatter,
-  dateFormatter
+  dateFormatter,
+  listErrrors
 };

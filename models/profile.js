@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const { dateFormatter } = require('../helpers/index');
+const { dateFormatter, urlFormatter } = require('../helpers/index');
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     /**
@@ -22,13 +22,74 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Profile.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    gender: DataTypes.STRING,
-    dateOfBirth: DataTypes.DATE,
-    phoneNumber: DataTypes.INTEGER,
-    UserProfileId: DataTypes.INTEGER,
-    imageProfileUrl: DataTypes.STRING
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: `First name is required`
+        },
+        notEmpty: {
+          msg: `First name is required`
+        }
+      }
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: `Last name is required`
+        },
+        notEmpty: {
+          msg: `Last name is required`
+        }
+      }
+    },    
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: `Gender is required`
+        },
+        notEmpty: {
+          msg: `Gender is required`
+        }
+      }
+    },
+    dateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: `Date of birth is required`
+        },
+        notEmpty: {
+          msg: `Date of birth is required`
+        }
+      }
+    },
+    phoneNumber: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: `Phone number is required`
+        },
+        notEmpty: {
+          msg: `Phone number is required`
+        }
+      }
+    },  
+    UserProfileId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    imageProfileUrl: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    }
   }, {
     sequelize,
     modelName: 'Profile',

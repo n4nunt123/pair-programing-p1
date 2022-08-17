@@ -26,6 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     isSuspended: {
       type: DataTypes.BOOLEAN,
       defaultValue: false
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false
     }
   }, {
     sequelize,

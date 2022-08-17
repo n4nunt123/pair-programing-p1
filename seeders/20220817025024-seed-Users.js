@@ -14,7 +14,7 @@ module.exports = {
     */
     const users = JSON.parse(fs.readFileSync('./data/users.json', 'utf-8')).map(el => {
       return {
-        ...el, createdAt: new Date(), updatedAt: new Date(), isSuspended: false
+        ...el, createdAt: new Date(), updatedAt: new Date(), isSuspended: false, isAdmin: false
       }
     })
 
