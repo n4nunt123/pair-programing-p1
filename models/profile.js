@@ -2,6 +2,7 @@
 const {
   Model
 } = require('sequelize');
+const { dateFormatter } = require('../helpers/index');
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     /**
@@ -11,7 +12,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Profile.belongsTo(models.User);
+      Profile.belongsTo(models.User, {
+        foreignKey: "UserProfileId"
+      });
+    }
+
+    get formattedDateOfBirth() {
+      return dateFormatter(this.dateOfBirth);
     }
   }
   Profile.init({
@@ -20,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     gender: DataTypes.STRING,
     dateOfBirth: DataTypes.DATE,
     phoneNumber: DataTypes.INTEGER,
-    UserId: DataTypes.INTEGER,
+    UserProfileId: DataTypes.INTEGER,
     imageProfileUrl: DataTypes.STRING
   }, {
     sequelize,
