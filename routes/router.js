@@ -41,8 +41,6 @@ router.get('/login', Controller.login)
 router.post('/login', Controller.logon)
 
 router.use((req, res, next) => {
-  console.log(req.session)
-  console.log(req.session.UserId)
   if (!req.session.UserId) {
     const error = `Please Login First`
     res.redirect(`/?error=${error}`)
