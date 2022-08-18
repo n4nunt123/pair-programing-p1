@@ -35,14 +35,24 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage,  fileFilter:fileFilter });
 
 router.get('/', Controller.login)
-router.get('/home/:id', Controller.home)
 router.get('/register', Controller.register)
 router.post('/register', Controller.saveRegister)
 router.get('/login', Controller.login)
 router.post('/login', Controller.logon)
-router.get('/admin', Controller.admin)
-router.get('/users', Controller.user)
-router.get('/users/:id/', Controller.suspend)
+
+router.use((req, res, next) => {
+  console.log(req.session)
+  console.log(req.session.UserId)
+  if (!req.session.UserId) {
+    const error = `Please Login First`
+    res.redirect(`/?error=${error}`)
+  } else {
+    next()
+  }
+})
+
+router.get('/logout', Controller.logout)
+router.get('/home', Controller.home)
 
 router.get('/profile/:ProfileId', Controller.showProfile);
 router.get('/profile/:ProfileId/add', Controller.addPost);
@@ -50,6 +60,22 @@ router.post('/profile/:ProfileId/add', upload.single('image'), Controller.savePo
 router.get('/profile/:ProfileId/edit', Controller.editProfile);
 router.post('/profile/:ProfileId/edit', upload.single('image'), Controller.saveEditProfile);
 router.get('/profile/:ProfileId/post/:PostId/delete', Controller.deletePost);
+
+
+router.use((req, res, next) => {
+  console.log(req.session.isAdmin)
+  if (!req.session.isAdmin) {
+    const error = `You're not an Admin`
+    res.redirect(`/home?error=${error}`)
+  } else {
+    next()
+  }
+})
+
+router.get('/admin', Controller.admin)
+router.get('/users', Controller.user)
+router.get('/users/:id/', Controller.suspend)
+
 
 
 module.exports = router;

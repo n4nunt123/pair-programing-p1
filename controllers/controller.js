@@ -24,8 +24,9 @@ class Controller {
 
   static addPost(req, res) {
     const UserId = +req.params.ProfileId;
+    const error = req.query.errors
     
-    res.render('add-post', { UserId });
+    res.render('add-post', { UserId, error });
   }
   
   static savePost(req,res) {
@@ -52,6 +53,7 @@ class Controller {
   }
 
   static editProfile(req, res) {
+    const error = req.query.errors
     const ProfileId = +req.params.ProfileId;
     
     Profile.findOne({
@@ -60,7 +62,7 @@ class Controller {
       }
     })
       .then(profile => {
-        res.render('edit-profile', { profile });
+        res.render('edit-profile', { profile, error });
       })
       .catch(err => {
         res.send(err);
@@ -123,8 +125,9 @@ class Controller {
   }
   
   static home(req, res) {
-    let ProfileId = req.params.id
+    let ProfileId = req.session.UserId
     let condition = req.query
+    let error = req.query.error
     if (condition) {
       condition = [Post.sortAndSearch(condition)].map(el => {
         return {
@@ -138,7 +141,7 @@ class Controller {
     }
     Post.findAll(condition[0])
       .then(result => {
-        res.render('home', { result, ProfileId, imageFormated })
+        res.render('home', { result, ProfileId, imageFormated, error })
       })
       .catch(err => {
         res.send(err)
@@ -200,13 +203,16 @@ class Controller {
             const isPasswordMatch = bcrypt.compareSync(password, result.password)
             
             if(isPasswordMatch) {
+              req.session.UserId = result.id // set session on controller login
               if (result.isSuspended) {
                 throw `Your Account Has Been Suspended`
               } else {
                 if (result.isAdmin) {
+                  req.session.isAdmin = result.isAdmin // set session on controller login
                   res.redirect('/admin')
                 } else {
-                  res.redirect(`/home/${result.id}`)
+                  req.session.isAdmin = result.isAdmin // set session on controller login
+                  res.redirect(`/home`)
                 }
               }
             } else {
@@ -241,7 +247,7 @@ class Controller {
     }
     Post.findAll(condition[0])
       .then(result => {
-        res.render('admin', { result })
+        res.render('admin', { result, imageFormated })
       })
       .catch(err => {
         res.send(err)
@@ -286,6 +292,13 @@ class Controller {
       .catch(err => {
         res.redirect(`/users?error=${err}`)
       })
+  }
+
+  static logout(req, res) {
+    req.session.isAdmin = undefined // set session on controller login
+    req.session.UserId = undefined // set session on controller login
+    console.log(req.session.isAdmin, req.session.UserId)
+    res.redirect('/login')
   }
 }
 

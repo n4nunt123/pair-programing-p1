@@ -20,7 +20,7 @@
         </ul>
       </div>
       <a href="/users" class="btn btn-outline-primary">List Users</a>
-      <a class="nav-link active" href="/login">Log out</a>
+      <a class="nav-link active" href="/logout">Log out</a>
     </div>
   </nav>
   <main>
@@ -34,7 +34,7 @@
           <a href="/admin?Oldest=true" class="btn btn-outline-dark">Oldest</a>
         </div>
         <div class="col-lg-6">
-          <form action="/">
+          <form action="/admin">
             <input type="search" id="search" name="search" class="form-control" value="">
           </form>
         </div>
@@ -43,10 +43,11 @@
         <% result.forEach(el => { %>
           <div class="col-lg-3 col-md-4 pd-left-none no-pd" style="background-color: white; margin-bottom: 25px;">
             <div style="border: 1px solid #e5e5e5; width: 100%; float: left; background-color: white; text-align: center;">
+            <% if(el.User.Profile.imageProfileUrl) {%> 
               <div class="user-pic">
-                <img src="<%= el.User.Profile.imageProfileUrl %>" alt="user_picture" style="width: 100%;">
+                <img src="/<%= imageFormated(el.User.Profile.imageProfileUrl) %>" alt="user_picture" style="width: 100%;">
               </div>
-              
+            <% } %>
               <div style="text-align: left; padding-left: 10px;">
                 <p>Name: <%= el.User.Profile.firstName %> <%= el.User.Profile.lastName %></p>
                 <p>Gender: <%= el.User.Profile.gender %></p>
@@ -57,7 +58,9 @@
           </div>
           
           <div class="col-lg-6 col-md-8 no-pd" style="background-color: #e5e5e5; width: 75%; margin-bottom: 25px;">
-            <img src="<%= el.imgUrl %>" alt="content-image" style="width: 200px">
+            <% if(el.imgUrl) {%> 
+              <img src="/<%= imageFormated(el.imgUrl) %>" alt="content-image" style="width: 200px">
+            <% } %>
             <p><%= el.content %></p>
             <br>
             <p>posted at: (<%= el.formattedTime %>)</p>

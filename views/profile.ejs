@@ -11,18 +11,18 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/home/<%= data.Profile.id %>">H8M8</a>
+      <a class="navbar-brand" href="/home">H8M8</a>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/home/<%= data.Profile.id %>">Home</a>
+            <a class="nav-link active" aria-current="page" href="/home">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="/profile/<%= data.Profile.id %>">Profile</a>
           </li>
         </ul>
       </div>
-      <a class="nav-link" href="#">Log out</a>
+      <a class="nav-link" href="/logout">Log out</a>
     </div>
   </nav>
 
@@ -32,24 +32,20 @@
       <a class="btn btn-secondary btn-sm" href="/profile/<%= data.Profile.id %>/edit" role="button">Edit Profile</a>
       <a class="btn btn-secondary btn-sm" href="/profile/<%= data.Profile.id %>/add" role="button">Add Post</a>
 
-      <div class="row">
-        <div class="col-lg-3 col-md-4 pd-left-none no-pd" style="background-color: white;">
-          <div style="margin-bottom: 25px; margin-top: 25px; border: 1px solid #e5e5e5; width: 100%; float: left; background-color: white; text-align: center;">
-            <% if(data.Profile.imageProfileUrl) {%>
-              <div class="user-pic">
-                <img src="/<%= imageFormated(data.Profile.imageProfileUrl) %>" alt="user_picture" style="width: 100%;">
-              </div>
-            <% } %>
-            <div>
-              <p><%= data.Profile.firstName %> <%= data.Profile.lastName %></p>
-              <p><%= data.email %></p>
-              <p><%= data.Profile.phoneNumber %></p>
-            </div>
+      <div class="col-lg-6 col-md-8 no-pd" style="background-color: #e5e5e5; width: 75%; margin-bottom: 25px; margin-top: 25px; border: 1px solid #e5e5e5; background-color: white; text-align: center; margin-left: auto; margin-right: auto;">
+        <% if(data.Profile.imageProfileUrl) {%>
+          <div class="user-pic">
+            <img src="/<%= imageFormated(data.Profile.imageProfileUrl) %>" alt="user_picture" style="width: 100%;">
           </div>
+        <% } %>
+        <div>
+          <p><%= data.Profile.firstName %> <%= data.Profile.lastName %></p>
+          <p><%= data.email %></p>
+          <p><%= data.Profile.phoneNumber %></p>
         </div>
         
         <% data.Posts.forEach((el) => { %>
-          <div class="col-lg-6 col-md-8 no-pd" style="background-color: #e5e5e5; width: 75%; margin-bottom: 25px; margin-top: 25px;">
+          <div class="col-lg-6 col-md-8 no-pd" style="background-color: white; width: 80%; border: 1px solid #e5e5e5; margin-bottom: 25px; margin-top: 25px; margin-left: auto; margin-right: auto;">
             <% if(el.imgUrl) {%>
               <img src="/<%= imageFormated(el.imgUrl) %>" alt="content-image" style="width: 200px">
             <% } %>
