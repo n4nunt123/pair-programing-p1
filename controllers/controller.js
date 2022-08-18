@@ -193,20 +193,23 @@ class Controller {
   static logon(req, res){
     const { username, password } = req.body
     if (!username || !password) {
-      throw `Invalid Username/Password`
+      const err =  `Invalid Username/Password`
+      res.redirect(`/login?error=${err}`)
     } else {
       User.findOne({ where: { username }})
         .then(result => {
           if (!result) {
-            throw `Invalid Username/Password`
-          } else {
+            const err =  `Invalid Username/Password`
+              res.redirect(`/login?error=${err}`)
+            } else {
             const isPasswordMatch = bcrypt.compareSync(password, result.password)
             
             if(isPasswordMatch) {
               req.session.UserId = result.id // set session on controller login
               if (result.isSuspended) {
-                throw `Your Account Has Been Suspended`
-              } else {
+                const err =  `Your Account Has Been Suspended`
+                res.redirect(`/login?error=${err}`)
+            } else {
                 if (result.isAdmin) {
                   req.session.isAdmin = result.isAdmin // set session on controller login
                   res.redirect('/admin')
@@ -216,7 +219,8 @@ class Controller {
                 }
               }
             } else {
-              throw `Invalid Username/Password`
+              const err = `Invalid Username/Password`
+              res.redirect(`/login?error=${err}`)
             }
           }
         })
