@@ -1,6 +1,6 @@
-const { Admin, User, Profile, Post } = require('../models');
+const { User, Profile, Post } = require('../models');
 const bcrypt = require('bcryptjs');
-const { listErrrors } = require('../helpers/index');
+const { listErrrors, imageFormated } = require('../helpers/index');
 
 class Controller {
   static showProfile(req, res) {
@@ -11,13 +11,11 @@ class Controller {
         id: UserId
       },
       include: {
-        all: true,
-        required: true
+        all: true
       }
     })
     .then(data => {
-      res.render('profile', { data })
-      // res.send(data)
+      res.render('profile', { data, imageFormated })
     })
     .catch(err => {
       res.send(err);
@@ -49,7 +47,7 @@ class Controller {
         res.redirect(`/profile/${ProfileId}`)
       })
       .catch(err => {
-        res.redirect(`/profile/${ProfileId}/add?errors=${listErrrors(err)}`);
+        res.redirect(`/profile/${ProfileId}/add?errors=${listErrrors(err)}`)
       })
   }
 
@@ -63,7 +61,6 @@ class Controller {
     })
       .then(profile => {
         res.render('edit-profile', { profile });
-        // res.send({profile});
       })
       .catch(err => {
         res.send(err);
@@ -126,31 +123,22 @@ class Controller {
   }
   
   static home(req, res) {
+    let ProfileId = req.params.id
     let condition = req.query
     if (condition) {
       condition = [Post.sortAndSearch(condition)].map(el => {
         return {
           ...el,
-          include: User
+          include: {
+            model:User,
+            include: { model:Profile }
+          }
         }
       })
-    } else {
-      condition = { include: User }
     }
-    let listPost = {}
     Post.findAll(condition[0])
       .then(result => {
-        listPost = result
-        let listProfile = [Post.profilePost(result)].map(el => {
-          return {
-            ...el,
-            include: User
-          }
-        })
-        return Profile.findAll(listProfile[0])
-      })
-      .then(result => {
-        res.render('home', { listPost, result })
+        res.render('home', { result, ProfileId, imageFormated })
       })
       .catch(err => {
         res.send(err)
@@ -190,7 +178,7 @@ class Controller {
         res.redirect('/login')
       })
       .catch(err => {
-        res.redirect(`/register?error=${listError(err)}`)
+        res.redirect(`/register?error=${listErrrors(err)}`)
       })
   }
 
@@ -202,36 +190,32 @@ class Controller {
   static logon(req, res){
     const { username, password } = req.body
     if (!username || !password) {
-      const error = `Invalid Username/Password`
-      res.redirect(`/login?error=${error}`)
+      throw `Invalid Username/Password`
     } else {
       User.findOne({ where: { username }})
         .then(result => {
           if (!result) {
-            const error = `Invalid Username/Password`
-            res.redirect(`/login?error=${error}`)
+            throw `Invalid Username/Password`
           } else {
             const isPasswordMatch = bcrypt.compareSync(password, result.password)
             
             if(isPasswordMatch) {
               if (result.isSuspended) {
-                const error = `Your Account Has Been Suspended`
-                res.redirect(`/login?error=${error}`)
+                throw `Your Account Has Been Suspended`
               } else {
                 if (result.isAdmin) {
                   res.redirect('/admin')
                 } else {
-                  res.redirect('/')
+                  res.redirect(`/home/${result.id}`)
                 }
               }
             } else {
-              const error = `Invalid Username/Password`
-              res.redirect(`/login?error=${error}`)
+              throw `Invalid Username/Password`
             }
           }
         })
         .catch(err => {
-          res.send(err)
+          res.redirect(`/login?error=${err}`)
         })
     }
   }
@@ -242,26 +226,22 @@ class Controller {
       condition = [Post.sortAndSearch(condition)].map(el => {
         return {
           ...el,
-          include: User
+          include: {
+            model:User,
+            include: { model:Profile }
+          }
         }
       })
     } else {
-      condition = { include: User }
+      condition = { include: {
+        model:User,
+        include: { model:Profile }
+        }
+      }
     }
-    let listPost = {}
     Post.findAll(condition[0])
       .then(result => {
-        listPost = result
-        let listProfile = [Post.profilePost(result)].map(el => {
-          return {
-            ...el,
-            include: User
-          }
-        })
-        return Profile.findAll(listProfile[0])
-      })
-      .then(result => {
-        res.render('admin', { listPost, result })
+        res.render('admin', { result })
       })
       .catch(err => {
         res.send(err)
@@ -301,10 +281,10 @@ class Controller {
         }
       })
       .then(result => {
-        res.redirect('/user')
+        res.redirect('/users')
       })
       .catch(err => {
-        res.redirect(`/user?error=${err}`)
+        res.redirect(`/users?error=${err}`)
       })
   }
 }

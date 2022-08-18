@@ -2,8 +2,8 @@
 const {
   Model
 } = require('sequelize');
+const { timeFormatter, dateFormatter, listErrrors } = require('../helpers/index')
 const { Op } = require('sequelize')
-const { timeFormatter } = require('../helpers/index');
 module.exports = (sequelize, DataTypes) => {
   class Post extends Model {
     /**
@@ -25,17 +25,18 @@ module.exports = (sequelize, DataTypes) => {
     static sortAndSearch(condition){
       if (Boolean(condition.Newest)) {
         return {
-          order: [['createdAt','DESC']]
+          order: [['updatedAt','DESC']]
         }
       } else if (Boolean(condition.Oldest)) {
         return {
-          order: [['createdAt','Asc']]
+          order: [['updatedAt','ASC']]
         }
       } else if (condition.search) {
         return {
           where: {
             content: { [Op.iLike]: `%${condition.search}%` } 
-          }
+          },
+          order: [['updatedAt','DESC']]
         }
       }
     }
@@ -44,15 +45,16 @@ module.exports = (sequelize, DataTypes) => {
       let listProfile = data.map(el => {
         return el.UserPostId
       })
+      let uniqueProfileId = [...new Set(listProfile)]
       return {
         where: {
           UserProfileId: { 
-            [Op.or]: listProfile
+            [Op.or]: uniqueProfileId
           }
         }
       }
     }
-    
+
   }
   Post.init({
     content: {

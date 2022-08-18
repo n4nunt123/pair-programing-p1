@@ -28,8 +28,13 @@ function listErrrors(error) {
   return error.errors.map(el => el.message);
 }
 
+let imageFormated = (imgUrl) => {
+  return imgUrl.substring(7)
+}
+
 module.exports = { 
   timeFormatter,
   dateFormatter,
-  listErrrors
+  listErrrors,
+  imageFormated
 };

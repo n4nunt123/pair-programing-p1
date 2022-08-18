@@ -2,6 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Controller = require('../controllers/controller');
 const multer = require('multer');
+const path = require('path')
+
+const { Profile, Post, User } = require('../models')
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -10,7 +13,8 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     // Configure filename
-    cb(null, new Date().getTime() + '-' + file.originalname);
+    // cb(null, new Date().getTime() + '-' + file.originalname);
+    cb(null, new Date().getTime() + '-' + path.extname(file.originalname));
   }
 })
 
@@ -30,7 +34,8 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ storage: storage,  fileFilter:fileFilter });
 
-router.get('/', Controller.home)
+router.get('/', Controller.login)
+router.get('/home/:id', Controller.home)
 router.get('/register', Controller.register)
 router.post('/register', Controller.saveRegister)
 router.get('/login', Controller.login)
@@ -45,5 +50,6 @@ router.post('/profile/:ProfileId/add', upload.single('image'), Controller.savePo
 router.get('/profile/:ProfileId/edit', Controller.editProfile);
 router.post('/profile/:ProfileId/edit', upload.single('image'), Controller.saveEditProfile);
 router.get('/profile/:ProfileId/post/:PostId/delete', Controller.deletePost);
+
 
 module.exports = router;

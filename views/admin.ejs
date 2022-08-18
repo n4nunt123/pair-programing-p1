@@ -28,10 +28,10 @@
       <h1>LOG ADMIN</h1>
       <div style="margin-bottom: 15px;" class="row">
         <div class="col-lg-1">
-          <a href="/?Newest=true" class="btn btn-outline-dark">Newest</a>
+          <a href="/admin?Newest=true" class="btn btn-outline-dark">Newest</a>
         </div>
         <div class="col-lg-1">
-          <a href="/?Oldest=true" class="btn btn-outline-dark">Oldest</a>
+          <a href="/admin?Oldest=true" class="btn btn-outline-dark">Oldest</a>
         </div>
         <div class="col-lg-6">
           <form action="/">
@@ -40,31 +40,29 @@
         </div>
       </div>
       <div class="row">
-        <% for (let i = 0; i < listPost.length; i++) { %>
-          <% let profile = result[i] %>
-          <% let post = listPost[i] %>
+        <% result.forEach(el => { %>
           <div class="col-lg-3 col-md-4 pd-left-none no-pd" style="background-color: white; margin-bottom: 25px;">
             <div style="border: 1px solid #e5e5e5; width: 100%; float: left; background-color: white; text-align: center;">
               <div class="user-pic">
-                <img src="<%= profile.imageProfileUrl %>" alt="user_picture" style="width: 100%;">
+                <img src="<%= el.User.Profile.imageProfileUrl %>" alt="user_picture" style="width: 100%;">
               </div>
+              
               <div style="text-align: left; padding-left: 10px;">
-                <p>Name: <%= profile.firstName %> <%= profile.lastName %></p>
-                <p>Gender: <%= profile.gender %></p>
-                <p>Phone Number: <%= profile.phoneNumber %></p>
-                <p>Email: <%= profile.User.email %></p>
+                <p>Name: <%= el.User.Profile.firstName %> <%= el.User.Profile.lastName %></p>
+                <p>Gender: <%= el.User.Profile.gender %></p>
+                <p>Phone Number: <%= el.User.Profile.phoneNumber %></p>
+                <p>Email: <%= el.User.email %></p>
               </div>
             </div>
           </div>
-
+          
           <div class="col-lg-6 col-md-8 no-pd" style="background-color: #e5e5e5; width: 75%; margin-bottom: 25px;">
-            <img src="<%= post.imgUrl %>" alt="content-image" style="width: 200px">
-            <p><%= post.content %></p>
+            <img src="<%= el.imgUrl %>" alt="content-image" style="width: 200px">
+            <p><%= el.content %></p>
             <br>
-            <p>posted at: (<%= post.createdAt %>)</p>
+            <p>posted at: (<%= el.formattedTime %>)</p>
           </div>
-        
-        <% } %>
+        <% }); %>
       </div>
     </div>
   </main>

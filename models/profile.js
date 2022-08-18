@@ -2,7 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const { dateFormatter, urlFormatter } = require('../helpers/index');
+const { timeFormatter, dateFormatter, listErrrors } = require('../helpers/index')
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
     /**
@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     get formattedDateOfBirth() {
       return dateFormatter(this.dateOfBirth);
     }
+
   }
   Profile.init({
     firstName: {
