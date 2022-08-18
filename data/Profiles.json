@@ -4,47 +4,47 @@
     "lastName": "Noct",
     "gender": "Male",
     "dateOfBirth": "1995-06-01",
-    "phoneNumber": 6823231123,
-    "UserId": 1
+    "phoneNumber": 682323112,
+    "UserProfileId": 1
   },
   {
     "firstName": "Celestine",
     "lastName": "Crestoria",
     "gender": "Female",
     "dateOfBirth": "1999-01-01",
-    "phoneNumber": 8582438938,
-    "UserId": 2
+    "phoneNumber": 858243893,
+    "UserProfileId": 2
   },
   {
     "firstName": "Joko",
     "lastName": "Supriajo",
     "gender": "Male",
     "dateOfBirth": "1995-12-12",
-    "phoneNumber": 5709927269,
-    "UserId": 3
+    "phoneNumber": 570992726,
+    "UserProfileId": 3
   },
   {
     "firstName": "Ikhsan",
     "lastName": "San",
     "gender": "Male",
     "dateOfBirth": "1999-09-09",
-    "phoneNumber": 2173644423,
-    "UserId": 4
+    "phoneNumber": 217364442,
+    "UserProfileId": 4
   },
   {
     "firstName": "Ryru",
     "lastName": "Lobo",
     "gender": "Male",
     "dateOfBirth": "1998-08-08",
-    "phoneNumber": 8153243264,
-    "UserId": 5
+    "phoneNumber": 815324326,
+    "UserProfileId": 5
   },
   {
     "firstName": "Akahana",
     "lastName": "Rue",
     "gender": "Female",
     "dateOfBirth": "1997-07-07",
-    "phoneNumber": 9104492765,
-    "UserId": 6
+    "phoneNumber": 910449276,
+    "UserProfileId": 6
   }
 ]
